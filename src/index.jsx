@@ -12,7 +12,7 @@ const main = async () => {
   core.info('[INFO] Usage https://github.com/githubocto/repo-visualizer#readme')
   
   const shouldPush = core.getBooleanInput('should_push')
-  
+  core.info(`shouldPush: ${shouldPush}`)
   if (shouldPush) {
     core.startGroup('Configuration')
     const username = 'repo-visualizer'
