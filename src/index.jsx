@@ -10,18 +10,21 @@ import { Tree } from "./Tree.tsx"
 
 const main = async () => {
   core.info('[INFO] Usage https://github.com/githubocto/repo-visualizer#readme')
+  
+  const shouldPush = core.getBooleanInput('should_push')
+  
+  if (shouldPush) {
+    core.startGroup('Configuration')
+    const username = 'repo-visualizer'
+    await exec('git', ['config', 'user.name', username])
+    await exec('git', [
+      'config',
+      'user.email',
+      `${username}@users.noreply.github.com`,
+    ])
 
-  core.startGroup('Configuration')
-  const username = 'repo-visualizer'
-  await exec('git', ['config', 'user.name', username])
-  await exec('git', [
-    'config',
-    'user.email',
-    `${username}@users.noreply.github.com`,
-  ])
-
-  core.endGroup()
-
+    core.endGroup()
+  }
 
   const rootPath = core.getInput("root_path") || ""; // Micro and minimatch do not support paths starting with ./
   const maxDepth = core.getInput("max_depth") || 9
@@ -70,7 +73,6 @@ const main = async () => {
     return
   }
 
-  const shouldPush = core.getBooleanInput('should_push')
   if (shouldPush) {
     core.startGroup('Commit and push diagram')
     await exec('git', ['commit', '-m', commitMessage])
